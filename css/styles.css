@@ -49,6 +49,12 @@ body {
   display: flex;
   gap: 4px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tab-btn {
@@ -163,7 +169,7 @@ main {
 }
 
 input, select {
-  font-size: 0.95rem;
+  font-size: 16px; /* keeps iOS Safari from auto-zooming on focus */
   padding: 8px 10px;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -235,4 +241,6 @@ button[type="submit"] {
 @media (max-width: 480px) {
   .stat-row { grid-template-columns: 1fr 1fr; }
   .stat-row .stat-card:last-child { grid-column: span 2; }
+  .tab-btn { padding: 10px 10px; font-size: 0.85rem; }
+  main { padding: 16px 12px 60px; }
 }

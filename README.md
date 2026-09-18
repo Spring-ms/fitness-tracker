@@ -35,6 +35,19 @@ npm install -g wrangler
 wrangler pages deploy .
 ```
 
+## Mobile
+
+The site is a responsive, installable PWA:
+
+- Open the deployed URL in any mobile browser — it works like a normal
+  responsive site.
+- **Add to Home Screen** for an app-like experience (own icon, no browser
+  chrome): Safari → Share → Add to Home Screen; Chrome on Android → menu →
+  Install app / Add to Home screen.
+- A service worker ([sw.js](sw.js)) caches the app shell so it keeps working
+  offline after the first load. Data is still per-browser localStorage, so
+  installing on a phone does not sync with your desktop entries.
+
 ## Data & privacy
 
 All entries live only in your browser's localStorage under keys prefixed
