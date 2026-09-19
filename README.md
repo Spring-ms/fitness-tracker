@@ -1,55 +1,48 @@
 # Fitness Tracker
 
-A static, no-build fitness tracker: workouts, body weight, and calories, all
-stored in your browser's `localStorage` (no backend, no account, no sync
-across devices/browsers).
+Log workouts, body weight, and calories. Users create an account and their data
+is saved server-side, so it's there whenever they log back in from any device.
+
+**Stack:** static front end in `public/` + a Cloudflare Worker (`src/worker.js`)
+serving a JSON API, with users and entries stored in Cloudflare D1 (SQLite).
+Passwords are hashed with PBKDF2-SHA256 (per-user salt); sessions are HMAC-signed
+httpOnly cookies.
 
 ## Run locally
 
-No build step needed. Serve the folder with any static file server, e.g.:
+No Cloudflare login needed — `wrangler dev` uses a local D1 database.
 
 ```bash
-python -m http.server 8000
+npm install
+cp .dev.vars.example .dev.vars   # then put a long random string in JWT_SECRET
+npm run db:local                 # create tables in the local D1
+npm run dev                      # http://localhost:8123 (use --port 8123)
 ```
 
-Then open http://localhost:8000.
+## Deploy to Cloudflare
 
-## Deploy to Cloudflare Pages
-
-**Option A — direct upload (no GitHub, no CLI):**
-
-1. Go to the Cloudflare dashboard → Workers & Pages → Create → Pages → Upload assets.
-2. Upload this whole folder (`index.html`, `css/`, `js/`).
-3. Cloudflare gives you a `*.pages.dev` URL immediately.
-
-**Option B — connect a GitHub repo (auto-deploys on push):**
-
-1. Push this folder to a GitHub repo.
-2. Cloudflare dashboard → Workers & Pages → Create → Pages → Connect to Git.
-3. Build settings: no build command, output directory `/` (project root).
-
-**Option C — Wrangler CLI** (requires Node.js installed):
+Authenticate wrangler with either `npx wrangler login` or an API token
+(Account > D1 > Edit, Account > Workers Scripts > Edit):
 
 ```bash
-npm install -g wrangler
-wrangler pages deploy .
+export CLOUDFLARE_API_TOKEN="..."      # zsh/bash
 ```
 
-## Mobile
+Then:
 
-The site is a responsive, installable PWA:
+```bash
+npx wrangler d1 create fitness-db      # copy the printed database_id into wrangler.toml
+npm run db:remote                      # create tables in the remote D1
+npx wrangler secret put JWT_SECRET     # paste a long random string
+npm run deploy
+```
 
-- Open the deployed URL in any mobile browser — it works like a normal
-  responsive site.
-- **Add to Home Screen** for an app-like experience (own icon, no browser
-  chrome): Safari → Share → Add to Home Screen; Chrome on Android → menu →
-  Install app / Add to Home screen.
-- A service worker ([sw.js](sw.js)) caches the app shell so it keeps working
-  offline after the first load. Data is still per-browser localStorage, so
-  installing on a phone does not sync with your desktop entries.
+`.dev.vars` and any API token must never be committed.
 
-## Data & privacy
+## Notes
 
-All entries live only in your browser's localStorage under keys prefixed
-`ft_`. Clearing site data/cookies for the deployed site will erase your
-history. There is currently no export/import or multi-device sync.
+- Existing entries saved in a browser's `localStorage` (from before accounts)
+  are offered for import into the account on first login.
+- Login attempts aren't rate-limited in code; add a Cloudflare rate-limiting
+  rule for `/api/login` and `/api/signup` in the dashboard.
+- The site is an installable PWA; API responses are never cached by the service worker.

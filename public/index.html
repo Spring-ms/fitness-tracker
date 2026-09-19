@@ -15,6 +15,19 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <div id="auth-overlay" class="auth-overlay" hidden>
+    <form id="auth-form" class="entry-form auth-card">
+      <h1>🏋️ Fitness Tracker</h1>
+      <h2 id="auth-title">Log in</h2>
+      <label>Email<input type="email" id="auth-email" autocomplete="email" required /></label>
+      <label>Password<input type="password" id="auth-password" minlength="8" required /></label>
+      <p id="auth-error" class="auth-error" role="alert"></p>
+      <button type="submit" id="auth-submit">Log in</button>
+      <button type="button" id="auth-toggle" class="link-btn"></button>
+    </form>
+  </div>
+
+  <div id="app-root" hidden>
   <header class="app-header">
     <h1>🏋️ Fitness Tracker</h1>
     <nav class="tabs">
@@ -119,9 +132,11 @@
           </select>
         </label>
       </form>
-      <p class="hint">All data is stored only in this browser (localStorage). Clearing your browser data will erase it. There is no account or sync.</p>
+      <p class="hint">Signed in as <strong id="account-email"></strong>. Your data is saved to your account and available anywhere you log in.</p>
+      <button type="button" id="logout-btn">Log out</button>
     </section>
   </main>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <script src="js/foods.js"></script>

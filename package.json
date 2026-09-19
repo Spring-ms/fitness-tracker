@@ -1,0 +1,15 @@
+{
+  "name": "fitness-tracker",
+  "version": "1.0.0",
+  "description": "Fitness tracker with user accounts on Cloudflare Workers + D1.",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "db:local": "wrangler d1 execute fitness-db --local --file=schema.sql",
+    "db:remote": "wrangler d1 execute fitness-db --remote --file=schema.sql",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}

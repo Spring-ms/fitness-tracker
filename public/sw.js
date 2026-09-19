@@ -1,4 +1,4 @@
-const CACHE_NAME = "fitness-tracker-v1";
+const CACHE_NAME = "fitness-tracker-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -30,6 +30,7 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  if (new URL(event.request.url).pathname.startsWith("/api/")) return; // never cache account data
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const fetchPromise = fetch(event.request)

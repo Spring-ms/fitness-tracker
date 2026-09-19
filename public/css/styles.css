@@ -244,3 +244,16 @@ button[type="submit"] {
   .tab-btn { padding: 10px 10px; font-size: 0.85rem; }
   main { padding: 16px 12px 60px; }
 }
+
+/* ---------- Auth ---------- */
+[hidden] { display: none !important; }
+.auth-overlay {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.auth-card { width: 100%; max-width: 360px; }
+.auth-error { color: var(--danger); min-height: 1.2em; margin: 0; font-size: 0.9rem; }
+.link-btn { background: none; border: none; color: var(--accent); cursor: pointer; padding: 4px; }
